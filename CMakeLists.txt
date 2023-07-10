@@ -36,7 +36,7 @@ add_library(cotp SHARED ${SOURCE_FILES})
 
 target_link_libraries(cotp ${GCRYPT_LIBRARIES})
 target_include_directories (cotp 
-    PUBLIC
+    INTERFACE
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
         "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
@@ -58,6 +58,12 @@ install(
   DESTINATION ${COTP_INC_DIR}
 )
 
+install(
+        TARGETS cotp
+        EXPORT ${COTP_HEADERS}
+        INCLUDES DESTINATION ${COTP_INC_DIR}
+)
+
 # Allow adding prefix if CMAKE_INSTALL_INCLUDEDIR not absolute.
 if(IS_ABSOLUTE "${CMAKE_INSTALL_INCLUDEDIR}")
     set(PKGCONFIG_TARGET_INCLUDES "${CMAKE_INSTALL_INCLUDEDIR}")
@@ -73,4 +79,5 @@ endif()
 
 configure_file("cotp.pc.in" "cotp.pc" @ONLY)
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cotp.pc" DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig/)
+install(FILES src/cotp.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/cotp.h")
 
